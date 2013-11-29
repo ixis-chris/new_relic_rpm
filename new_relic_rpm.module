@@ -326,12 +326,12 @@ function new_relic_rpm_curl($url, $post = array()) {
  * don't need it. This is needed because we need our hook_boot to be able to
  * operate before path.inc has been bootstrapped.
  *
- * @param $path
+ * @param string $path
  *   The path to match.
- * @param $patterns
+ * @param string $patterns
  *   String containing a set of patterns separated by \n, \r or \r\n.
  *
- * @return
+ * @return int
  *   1 if there is a match, 0 if there is not a match.
  */
 function new_relic_rpm_page_match($path, $patterns) {
