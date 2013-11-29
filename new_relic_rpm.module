@@ -19,7 +19,7 @@ function new_relic_rpm_menu() {
   );
   $items['admin/config/development/new-relic-rpm'] = array(
     'title' => 'New Relic RPM Settings',
-    'description' => 'Alter settings and mange your New Relic RPM Integration.',
+    'description' => 'Alter settings and manage your New Relic RPM Integration.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('new_relic_rpm_settings'),
     'access arguments' => array('administer new relic rpm'),
