@@ -275,6 +275,19 @@ function new_relic_rpm_module_deploy($new_modules, $disable_modules) {
 
 /**
  * Send deployments to New Relic's web API.
+ *
+ * @param string $user
+ *   The name of the user or process triggering the deployment, such as "Cron"
+ *   or "Drupal Module Install/Uninstall".
+ * @param string $description
+ *   A text annotation for this deployment. Can be used to store notes for your
+ *   own purposes.
+ * @param string $changelog
+ *   A list of changes for this deployment, such as what modules have been
+ *   enabled or disabled, or what has changed in version control.
+ * @param string $revision
+ *   The revision number or commit hash from the version control system.
+ *   Defaults to NULL.
  */
 function _new_relic_rpm_deploy($user, $description, $changelog, $revision = NULL) {
   $post_vars['deployment[application_id]'] = ini_get('newrelic.appname');
