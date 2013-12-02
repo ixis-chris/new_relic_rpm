@@ -376,17 +376,42 @@ function new_relic_rpm_flush_caches() {
  * Implements hook_user_login().
  */
 function new_relic_rpm_user_login(&$edit, $account) {
-  // We're only interested in this if the user has uid 1.
+  // Set up some variables for use later.
+  $description_pieces = array();
+
+  // We're only interested in this part if the user has uid 1.
   if (
     variable_get('new_relic_rpm_track_login_user_1', 0) === 1 &&
     isset($account->uid) &&
     $account->uid == 1
   ) {
+    // Set the flag. We'll record the event later.
+    $description_pieces[] = t('User 1');
+  }
+
+  // Check to see if the user has any of the roles we're interested in
+  // monitoring.
+  $monitored = variable_get('new_relic_rpm_track_login_roles', array());
+
+  if (!empty($monitored) && is_array($monitored) && !empty($account->roles) && is_array($account->roles)) {
+    foreach ($monitored as $role) {
+      // For each of the roles we're monitoring, look to see if the user is in
+      // that role. If so, store it for later.
+      if (isset($account->roles[$role])) {
+        // Store the name of the role for later. This also acts as a flag to
+        // indicate we should send this to New Relic.
+        $description_pieces[] = $account->roles[$role];
+      }
+    }
+  }
+
+  if (!empty($description_pieces)) {
     // Send the user login to New Relic as a deployment event.
     _new_relic_rpm_deploy(
       t('User Login'),
-      t('User 1 has logged in.'),
+      t('Details') . ': ' . implode(', ', $description_pieces),
       t('No changelog.')
     );
   }
+
 }

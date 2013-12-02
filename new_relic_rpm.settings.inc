@@ -48,6 +48,14 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value'  => variable_get('new_relic_rpm_track_login_user_1', 0),
   );
 
+  $form['new_relic_rpm_track_login_roles'] = array(
+    '#type'           => 'checkboxes',
+    '#title'          => t('Track logins for these roles'),
+    '#description'    => t('Check none to disable. A deployment will show up in New Relic for any users in roles that are checked below.'),
+    '#options'        => user_roles(TRUE),
+    '#default_value'  => variable_get('new_relic_rpm_track_login_roles', array()),
+  );
+
   $form['new_relic_rpm_module_deployment'] = array(
     '#type' => 'select',
     '#title' => t('Track module activation as deployment'),
