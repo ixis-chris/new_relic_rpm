@@ -351,3 +351,23 @@ function new_relic_rpm_page_match($path, $patterns) {
   $regexp = '/^(' . preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1' . preg_quote(variable_get('site_frontpage', 'node'), '/') . '\2'), preg_quote($patterns, '/')) . ')$/';
   return preg_match($regexp, $path);
 }
+
+/**
+ * Implements hook_flush_caches().
+ */
+function new_relic_rpm_flush_caches() {
+  if (variable_get('new_relic_rpm_track_cache_clears', FALSE)) {
+    global $user;
+
+    // Send the cache clear event to New Relic as a deployment event.
+    _new_relic_rpm_deploy(
+      t('Drupal Cache Clear'),
+      t('Cache cleared by user @uid.', array('@uid' => $user->uid)),
+      t('No changelog.')
+    );
+  }
+
+  // Return an empty array because an array is what the hook invocation is
+  // expecting.
+  return array();
+}
