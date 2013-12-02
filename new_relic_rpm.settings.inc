@@ -41,6 +41,13 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value'  => variable_get('new_relic_rpm_track_cache_clears', 0),
   );
 
+  $form['new_relic_rpm_track_login_user_1'] = array(
+    '#type'           => 'checkbox',
+    '#title'          => t('Track user 1 logins'),
+    '#description'    => t('If enabled, logins by user 1 will show up under the deployments system in New Relic'),
+    '#default_value'  => variable_get('new_relic_rpm_track_login_user_1', 0),
+  );
+
   $form['new_relic_rpm_module_deployment'] = array(
     '#type' => 'select',
     '#title' => t('Track module activation as deployment'),
