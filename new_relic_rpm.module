@@ -356,7 +356,7 @@ function new_relic_rpm_page_match($path, $patterns) {
  * Implements hook_flush_caches().
  */
 function new_relic_rpm_flush_caches() {
-  if (variable_get('new_relic_rpm_track_cache_clears', FALSE)) {
+  if (variable_get('new_relic_rpm_track_cache_clears', 0) === 1) {
     global $user;
 
     // Send the cache clear event to New Relic as a deployment event.

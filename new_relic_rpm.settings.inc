@@ -38,7 +38,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#type'           => 'checkbox',
     '#title'          => t('Track cache clears'),
     '#description'    => t('If enabled, cache clears will show up under the deployments system in New Relic.'),
-    '#default_value'  => variable_get('new_relic_rpm_track_cache_clears', FALSE),
+    '#default_value'  => variable_get('new_relic_rpm_track_cache_clears', 0),
   );
 
   $form['new_relic_rpm_module_deployment'] = array(
