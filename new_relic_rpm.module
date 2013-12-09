@@ -289,6 +289,9 @@ function new_relic_rpm_module_deploy($new_modules, $disable_modules) {
  * @param string $revision
  *   The revision number or commit hash from the version control system.
  *   Defaults to NULL.
+ *
+ * @return string
+ *   The result returned from the API call.
  */
 function _new_relic_rpm_deploy($user, $description, $changelog, $revision = NULL) {
   $post_vars['deployment[application_id]'] = ini_get('newrelic.appname');
@@ -308,6 +311,8 @@ function _new_relic_rpm_deploy($user, $description, $changelog, $revision = NULL
       '@description' => $description,
     )
   );
+
+  return $deployments;
 }
 
 /**
