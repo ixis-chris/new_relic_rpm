@@ -91,18 +91,18 @@ class NewRelicRpmRequest {
 
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 
     // Create the JSON to be sent to the API and provide it to cURL.
     $json = $this->createJson();
 
-    curl_setopt($ch, CURLOPT_POST, TRUE);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($curl, CURLOPT_POST, TRUE);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
 
     // Make the cURL request and record the response.
-    $this->response = curl_exec($ch);
+    $this->response = curl_exec($curl);
   }
 
   /**
