@@ -40,6 +40,13 @@ function new_relic_rpm_menu() {
     'access arguments' => array('view new relic rpm reports'),
     'file' => 'new_relic_rpm.reports.inc',
   );
+  $items['new-relic-rpm-plugin/%'] = array(
+    'title'             => 'New Relic RPM plugin data',
+    'type'              => MENU_CALLBACK,
+    'page callback'     => 'new_relic_rpm_plugin_data',
+    'access callback'   => 'new_relic_rpm_access_plugin_data',
+    'access arguments'  => array(1),
+  );
 
   return $items;
 }
@@ -438,4 +445,42 @@ function new_relic_rpm_user_login(&$edit, $account) {
     );
   }
 
+}
+
+/**
+ * Access callback to determine if access should be granted to the plugin data.
+ *
+ * @param string $key
+ *   The license key for the New Relic account that is being used.
+ *
+ * @return bool
+ *   TRUE if we can grant access. FALSE otherwise.
+ */
+function new_relic_rpm_access_plugin_data($key = '') {
+  $variable_key = variable_get('new_relic_rpm_license_key', '');
+
+  // If nobody has set the license key in the settings, we have to deny access
+  // here.
+  if (empty($variable_key)) {
+    return FALSE;
+  }
+
+  // Deny access if the key supplied as a parameter does not match the key set
+  // in the options.
+  if ($variable_key != $key) {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * Page callback for the plugin data page.
+ *
+ * Designed to be used by the plugin API script, not by humans. See
+ * plugins/README.txt for more information on how this works.
+ */
+function new_relic_rpm_plugin_data() {
+  print "test";
+  drupal_exit();
 }
