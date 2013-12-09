@@ -87,7 +87,7 @@ function new_relic_rpm_init() {
  *
  * Will invoke newrelic_notice_error() to forward the exception to New Relic.
  *
- * @param $exception
+ * @param Exception $exception
  *   The exception object that was thrown.
  */
 function _new_relic_rpm_exception_handler($exception) {
@@ -106,7 +106,8 @@ function _new_relic_rpm_exception_handler($exception) {
   }
   catch (Exception $exception2) {
     // Another uncaught exception was thrown while handling the first one.
-    // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
+    // If we are displaying errors, then do so with no possibility of a further
+    // uncaught exception being thrown.
     if (error_displayable()) {
       print '<h1>Additional uncaught exception thrown while handling exception.</h1>';
       print '<h2>Original</h2><p>' . _drupal_render_exception_safe($exception) . '</p>';
@@ -189,8 +190,10 @@ function new_relic_rpm_watchdog(array $log_entry) {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Not really sure what this does, but at least I'm documenting it.
+ *
+ * @param string $setting
+ *   A setting that can either be 'bg' or 'ignored'.
  */
 function new_relic_rpm_set_job_state($setting) {
   static $newrelic_module;
@@ -202,7 +205,7 @@ function new_relic_rpm_set_job_state($setting) {
   // If newrelic module isn't loaded into php, error and return.
   if (!$newrelic_module) {
     // Only throw error if we've booted far enough to watchdog.
-    // i.e. drush updatedb
+    // i.e. drush updatedb.
     if (function_exists('module_implements')) {
       watchdog('New Relic RPM', 'New Relic RPM PHP module not enabled.', array(), WATCHDOG_ERROR);
     }
@@ -254,7 +257,7 @@ function new_relic_rpm_module_deploy($new_modules, $disable_modules) {
     $modules_removed = !empty($disable_modules);
 
     if ($modules_installed) {
-      $m_inst = 'Modules Installed: ' . implode(', ', $new_modules ) . "\n";
+      $m_inst = 'Modules Installed: ' . implode(', ', $new_modules) . "\n";
     }
     else {
       $m_inst = '';
