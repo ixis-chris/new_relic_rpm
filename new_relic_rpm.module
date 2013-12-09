@@ -132,19 +132,19 @@ function new_relic_rpm_boot() {
 
   if (!empty($exclu_urls)) {
     if (!new_relic_rpm_page_match($path, $exclu_urls)) {
-      return new_relic_rpm_set_job_state('ignore');
+      new_relic_rpm_set_job_state('ignore');
     }
   }
 
   if (!empty($ignore_urls)) {
     if (new_relic_rpm_page_match($path, $ignore_urls)) {
-      return new_relic_rpm_set_job_state('ignore');
+      new_relic_rpm_set_job_state('ignore');
     }
   }
 
   if (!empty($bg_urls)) {
     if (new_relic_rpm_page_match($path, $bg_urls)) {
-      return new_relic_rpm_set_job_state('bg');
+      new_relic_rpm_set_job_state('bg');
     }
   }
 }
