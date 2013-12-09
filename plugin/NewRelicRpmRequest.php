@@ -64,7 +64,7 @@ class NewRelicRpmRequest {
   /**
    * Send the API request to the New Relic API and receive a response.
    */
-  protected function sendRequest() {
+  public function sendRequest() {
     // Make sure we're in a position to make the request, by checking that all
     // the parameters have been set correctly.
     if (!$this->verifyAgent()) {
