@@ -10,7 +10,12 @@
 function new_relic_rpm_settings($form, &$form_state) {
   $form = array();
 
-  $form['new_relic_rpm_track_drush'] = array(
+  $form['track_fieldset'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('Tracking'),
+  );
+
+  $form['track_fieldset']['new_relic_rpm_track_drush'] = array(
     '#type' => 'select',
     '#title' => t('Drush transactions'),
     '#description' => t('How do you wish RPM to track drush commands?'),
@@ -22,7 +27,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_track_drush', 'norm'),
   );
 
-  $form['new_relic_rpm_track_cron'] = array(
+  $form['track_fieldset']['new_relic_rpm_track_cron'] = array(
     '#type' => 'select',
     '#title' => t('Cron transactions'),
     '#description' => t('How do you wish RPM to track cron tasks?'),
@@ -34,21 +39,21 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_track_cron', 'norm'),
   );
 
-  $form['new_relic_rpm_track_cache_clears'] = array(
+  $form['track_fieldset']['new_relic_rpm_track_cache_clears'] = array(
     '#type'           => 'checkbox',
     '#title'          => t('Track cache clears'),
     '#description'    => t('If enabled, cache clears will show up under the deployments system in New Relic.'),
     '#default_value'  => variable_get('new_relic_rpm_track_cache_clears', 0),
   );
 
-  $form['new_relic_rpm_track_login_user_1'] = array(
+  $form['track_fieldset']['new_relic_rpm_track_login_user_1'] = array(
     '#type'           => 'checkbox',
     '#title'          => t('Track user 1 logins'),
     '#description'    => t('If enabled, logins by user 1 will show up under the deployments system in New Relic'),
     '#default_value'  => variable_get('new_relic_rpm_track_login_user_1', 0),
   );
 
-  $form['new_relic_rpm_track_login_roles'] = array(
+  $form['track_fieldset']['new_relic_rpm_track_login_roles'] = array(
     '#type'           => 'checkboxes',
     '#title'          => t('Track logins for these roles'),
     '#description'    => t('Check none to disable. A deployment will show up in New Relic for any users in roles that are checked below.'),
@@ -56,7 +61,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value'  => variable_get('new_relic_rpm_track_login_roles', array()),
   );
 
-  $form['new_relic_rpm_module_deployment'] = array(
+  $form['track_fieldset']['new_relic_rpm_module_deployment'] = array(
     '#type' => 'select',
     '#title' => t('Track module activation as deployment'),
     '#description' => t('Turning this on will create a "deployment" on the New Relic RPM dashboard each time a module is enabled or disabled. This will help you track before and after statistics.'),
@@ -67,7 +72,12 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_module_deployment', 0),
   );
 
-  $form['new_relic_rpm_ignore_urls'] = array(
+  $form['urls_fieldset'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('URLs'),
+  );
+
+  $form['urls_fieldset']['new_relic_rpm_ignore_urls'] = array(
     '#type' => 'textarea',
     '#wysiwyg' => FALSE,
     '#title' => t('Ignore URLs'),
@@ -75,7 +85,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_ignore_urls', ''),
   );
 
-  $form['new_relic_rpm_bg_urls'] = array(
+  $form['urls_fieldset']['new_relic_rpm_bg_urls'] = array(
     '#type' => 'textarea',
     '#wysiwyg' => FALSE,
     '#title' => t('Background URLs'),
@@ -83,7 +93,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_bg_urls', ''),
   );
 
-  $form['new_relic_rpm_exclusive_urls'] = array(
+  $form['urls_fieldset']['new_relic_rpm_exclusive_urls'] = array(
     '#type' => 'textarea',
     '#wysiwyg' => FALSE,
     '#title' => t('Exclusive URLs'),
@@ -91,14 +101,49 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_exclusive_urls', ''),
   );
 
-  $form['new_relic_rpm_api_key'] = array(
+  $form['plugin_fieldset'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('API plugin'),
+  );
+
+  $form['plugin_fieldset']['new_relic_rpm_license_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('API Key'),
+    '#description' => t('Enter your New Relic license key to allow the plugin functionality to work with this site. License key is not necessarily the same as API key. License key can be found by logging into New Relic and choosing Account Settings from the drop-down menu at the top right.'),
+    '#default_value' => variable_get('new_relic_rpm_license_key', ''),
+  );
+
+  $form['plugin_fieldset']['new_relic_rpm_plugin_count_users'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Monitor the number of users'),
+    '#default_value' => variable_get('new_relic_rpm_plugin_count_users', 0),
+  );
+
+  $form['plugin_fieldset']['new_relic_rpm_plugin_count_nodes'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Monitor the number of nodes'),
+    '#default_value' => variable_get('new_relic_rpm_plugin_count_nodes', 0),
+  );
+
+  $form['plugin_fieldset']['new_relic_rpm_plugin_count_comments'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Monitor the number of comments'),
+    '#default_value' => variable_get('new_relic_rpm_plugin_count_comments', 0),
+  );
+
+  $form['misc_fieldset'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('Miscellaneous'),
+  );
+
+  $form['misc_fieldset']['new_relic_rpm_api_key'] = array(
     '#type' => 'textfield',
     '#title' => t('API Key'),
     '#description' => t('Enter your New Relic API key if you wish to view reports and analysis within Drupal'),
     '#default_value' => variable_get('new_relic_rpm_api_key', ''),
   );
 
-  $form['new_relic_rpm_watchdog_severities'] = array(
+  $form['misc_fieldset']['new_relic_rpm_watchdog_severities'] = array(
     '#type' => 'select',
     '#multiple' => TRUE,
     '#title' => t('Forward watchdog messages'),
@@ -107,7 +152,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_watchdog_severities', array()),
   );
 
-  $form['new_relic_rpm_override_exception_handler'] = array(
+  $form['misc_fieldset']['new_relic_rpm_override_exception_handler'] = array(
     '#type' => 'checkbox',
     '#title' => t('Override exception handler'),
     '#description' => t('Check to override default Drupal exception handler and to have exceptions passed to New Relic'),
