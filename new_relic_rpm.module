@@ -153,8 +153,6 @@ function new_relic_rpm_boot() {
  * Implements hook_watchdog().
  */
 function new_relic_rpm_watchdog(array $log_entry) {
-  global $base_url;
-
   // Don't do anything if the new relic extension is not available.
   if (!function_exists('newrelic_notice_error')) {
     return;
