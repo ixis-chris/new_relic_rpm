@@ -299,7 +299,14 @@ function _new_relic_rpm_deploy($user, $description, $changelog, $revision = NULL
   }
   $deployments = new_relic_rpm_curl('https://rpm.newrelic.com/deployments.xml', $post_vars);
 
-  watchdog('new relic rpm', 'Module install/uninstall action logged as deployment. Log data: %details', array('%details' => $deployments));
+  watchdog(
+    'new relic rpm',
+    'Logged deployment: @description. Log data: <pre>%details</pre>',
+    array(
+      '%details' => $deployments,
+      '@description' => $description,
+    )
+  );
 }
 
 /**
