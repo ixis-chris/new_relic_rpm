@@ -481,6 +481,37 @@ function new_relic_rpm_access_plugin_data($key = '') {
  * plugins/README.txt for more information on how this works.
  */
 function new_relic_rpm_plugin_data() {
-  print "test";
+  $json = array();
+
+  // Add user count, if enabled.
+  if (variable_get('new_relic_rpm_plugin_count_users', 0) === 1) {
+    $user_count = db_query("SELECT COUNT(1) FROM {users}")->fetchField();
+    $json['users'] = $user_count;
+  }
+
+  // Add node count, if enabled.
+  if (variable_get('new_relic_rpm_plugin_count_nodes', 0) === 1) {
+    $node_count = db_query("SELECT COUNT(1) FROM {node}")->fetchField();
+    $json['nodes'] = $node_count;
+  }
+
+  // Add comment count, if enabled.
+  if (variable_get('new_relic_rpm_plugin_count_comments', 0) === 1) {
+    // Only get the comment count from the database if the comment module is
+    // enabled because otherwise the table won't exist.
+    if (module_exists('comment')) {
+      $comment_count = db_query("SELECT COUNT(1) FROM {comment}")->fetchField();
+      $json['comments'] = $comment_count;
+    }
+    else {
+      // If the comment module is not enabled then the comment count will be
+      // zero!
+      $json['comments'] = 0;
+    }
+  }
+
+  // JSON-encode the output (since this is only designed to be machine-readable
+  // anyway) and then just exit safely.
+  print json_encode($json);
   drupal_exit();
 }
