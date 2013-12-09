@@ -358,7 +358,18 @@ function new_relic_rpm_curl($url, $post = array()) {
  *   1 if there is a match, 0 if there is not a match.
  */
 function new_relic_rpm_page_match($path, $patterns) {
-  $regexp = '/^(' . preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1' . preg_quote(variable_get('site_frontpage', 'node'), '/') . '\2'), preg_quote($patterns, '/')) . ')$/';
+  $pattern = array(
+    '/(\r\n?|\n)/',
+    '/\\\\\*/',
+    '/(^|\|)\\\\<front\\\\>($|\|)/',
+  );
+  $replacement = array(
+    '|',
+    '.*',
+    '\1' . preg_quote(variable_get('site_frontpage', 'node'), '/') . '\2',
+  );
+
+  $regexp = '/^(' . preg_replace($pattern, $replacement, preg_quote($patterns, '/')) . ')$/';
   return preg_match($regexp, $path);
 }
 
