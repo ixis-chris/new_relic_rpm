@@ -128,7 +128,7 @@ class NewRelicRpmRequest {
     // Set up the data array for the agent.
     $agent = array(
       'host'    => $this->host,
-      'version' => $this->VERSION,
+      'version' => self::VERSION,
     );
 
     if (!empty($this->pid)) {
