@@ -58,7 +58,7 @@ class NewRelicRpmRequest {
    */
   protected function verifyAgent() {
     // Fail this check if the host has been left empty.
-    return empty($this->host);
+    return !empty($this->host);
   }
 
   /**
