@@ -140,10 +140,10 @@ class NewRelicRpmRequest {
 
     foreach ($this->getComponents() as $component) {
       $json_component = array(
-        'name'      => $this->metricName,
-        'guid'      => $this->metricGuid,
-        'duration'  => $this->metricDuration,
-        'metrics'   => $this->metricData,
+        'name'      => $component->metricName,
+        'guid'      => $component->metricGuid,
+        'duration'  => $component->metricDuration,
+        'metrics'   => $component->metricData,
       );
 
       $components[] = $json_component;
