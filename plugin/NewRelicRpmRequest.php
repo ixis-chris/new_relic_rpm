@@ -41,12 +41,16 @@ class NewRelicRpmRequest {
   /**
    * @var string
    * Maximum 32 characters, case-sensitive human-readable display name.
+   *
+   * This should be the name of the website.
    */
   public $metricName;
 
   /**
    * @var string
    * Reverse-domain-name-style identifier such as com.newrelic.myapp.
+   *
+   * Can be the reverse-domain of the website.
    */
   public $metricGuid;
 
@@ -103,14 +107,19 @@ class NewRelicRpmRequest {
    */
   public function sendRequest() {
     // Make sure we're in a position to make the request, by checking that all
-    // the parameters have been set correctly.
+    // the agent parameters have been set correctly.
     if (!$this->verifyAgent()) {
       throw new BadMethodCallException('Unable to make request: the agent details (host) have not been set correctly.');
     }
 
+    // Now check that all the metric parameters have been set correctly.
+    if (!$this->verifyMetric()) {
+      throw new BadMethodCallException('Unable to make request: the metric details (duration, name, guid) have not been set correctly.');
+    }
+
     foreach ($this->getComponents() as $component) {
-      if (!$component->verifyMetrics()) {
-        throw new BadMethodCallException('Unable to make request: the metrics details for one or more components (data, duration, guid, name) have not been set correctly.');
+      if (!$component->verify()) {
+        throw new BadMethodCallException('Unable to make request: component with name "' . $component->name . '" could not be verified.');
       }
     }
 
@@ -155,10 +164,13 @@ class NewRelicRpmRequest {
     if (!$this->verifyAgent()) {
       throw new BadMethodCallException('Unable to encode JSON: the agent details (host) have not been set correctly.');
     }
+    if (!$this->verifyMetric()) {
+      throw new BadMethodCallException('Unable to encode JSON: the metric details (duration, name, guid) have not been set correctly.');
+    }
 
     foreach ($this->getComponents() as $component) {
-      if (!$component->verifyMetrics()) {
-        throw new BadMethodCallException('Unable to encode JSON: the metrics details for one or more components (data, duration, guid, name) have not been set correctly.');
+      if (!$component->verify()) {
+        throw new BadMethodCallException('Unable to encode JSON: the component with name "' . $component->name . '" failed to verify.');
       }
     }
 
@@ -172,24 +184,31 @@ class NewRelicRpmRequest {
       $agent['pid'] = $this->pid;
     }
 
+    $metric = array(
+      'name'      => $this->metricName,
+      'guid'      => $this->metricGuid,
+      'duration'  => $this->metricDuration,
+    );
+
     // Set up each componeont to supply the metrics data.
     $components = array();
 
     foreach ($this->getComponents() as $component) {
-      $json_component = array(
-        'name'      => $component->metricName,
-        'guid'      => $component->metricGuid,
-        'duration'  => $component->metricDuration,
-        'metrics'   => $component->metricData,
-      );
-
-      $components[] = $json_component;
+      // Explicit cast is needed here otherwise the JSON conversion process
+      // unreliably sometimes puts double quotes around numbers. This causes the
+      // New Relic plugin API to fail as it REQUIRES a number and not a string.
+      $components[$component->__toString()] = (int) $component->value;
     }
 
     // Put everything together and return the encoded JSON.
+    $metric['metrics'] = $components;
+
     $json = array(
       'agent'       => $agent,
-      'components'  => $components,
+
+      // Note that in the JSON, "components" is actually an array and can accept
+      // multiple components but we're just sending one here.
+      'components'  => array($metric),
     );
 
     return json_encode($json);

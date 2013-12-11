@@ -23,18 +23,31 @@ $response = curl_exec($curl);
 curl_close($curl);
 
 $json = json_decode($response);
-$components = array();
+
+// Create a new request. We'll populate it later once we know if we have any
+// components or not.
 $request = new NewRelicRpmRequest();
+
+// Set up some components into which we can load data.
+$components = array();
 $any_components = FALSE;
 
+// These are the things that we want to measure and send to the plugin API. The
+// machine-readable is the array key and the value is an array of name and
+// units.
+$measurements = array(
+  'total_users'     => array('name' => 'Total Users', 'units' => 'users'),
+  'total_nodes'     => array('name' => 'Total Nodes', 'units' => 'nodes'),
+  'total_comments'  => array('name' => 'Total Comments', 'units' => 'comments'),
+);
+
 // Collect up all the components we will need to measure metrics against.
-foreach (array('users', 'nodes', 'comments') as $thing) {
-  if (isset($json->$thing)) {
+foreach ($measurements as $machine_name => $extra_info) {
+  if (isset($json->$machine_name)) {
     $component = new NewRelicRpmRequestComponent();
-    $component->metricName = ucfirst($thing);
-    $component->metricDuration = 1;
-    $component->metricGuid = 'uk.co.ixis.newrelic.' . $thing;
-    $component->metricData = $json->$thing;
+    $component->name = $machine_name;
+    $component->units = $extra_info['units'];
+    $component->value = $json->$machine_name;
 
     $request->addComponent($component);
 
@@ -53,6 +66,10 @@ if (!$any_components) {
 // Finish setting up the request data.
 $request->licenseKey = $opts['k'];
 $request->host = $opts['h'];
+
+$request->metricName = 'Site-Install';
+$request->metricGuid = 'dev.drupal.relic';
+$request->metricDuration = 1;
 
 $request->sendRequest();
 print_r($request->response);
