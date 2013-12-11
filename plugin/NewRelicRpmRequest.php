@@ -39,6 +39,27 @@ class NewRelicRpmRequest {
   public $pid = 0;
 
   /**
+   * @var string
+   * Maximum 32 characters, case-sensitive human-readable display name.
+   */
+  public $metricName;
+
+  /**
+   * @var string
+   * Reverse-domain-name-style identifier such as com.newrelic.myapp.
+   */
+  public $metricGuid;
+
+  /**
+   * @var int
+   * The number of seconds over which these data were collected.
+   *
+   * The end time is automatically implied as the time the request is received
+   * by the API.
+   */
+  public $metricDuration;
+
+  /**
    * @var NewRelicRpmRequestComponent[]
    * Array of the metric components that make up this request.
    */
@@ -59,6 +80,22 @@ class NewRelicRpmRequest {
   protected function verifyAgent() {
     // Fail this check if the host has been left empty.
     return !empty($this->host);
+  }
+
+  /**
+   * Make sure that internally, the metric data are ready to be used.
+   */
+  public function verifyMetric() {
+    if (
+      empty($this->metricName) ||
+      empty($this->metricGuid) ||
+      empty($this->metricDuration)
+    ) {
+      return FALSE;
+    }
+
+    // We got here, so it's successful.
+    return TRUE;
   }
 
   /**
