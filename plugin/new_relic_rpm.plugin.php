@@ -67,7 +67,7 @@ if (!$any_components) {
 $request->licenseKey = $opts['k'];
 $request->host = $opts['h'];
 
-$request->metricName = 'Site-Install';
+$request->metricName = isset($json->site_name) ? $json->site_name : 'Unknown website';
 $request->metricGuid = 'org.Drupal';
 $request->metricDuration = 1;
 

@@ -481,7 +481,9 @@ function new_relic_rpm_access_plugin_data($key = '') {
  * plugins/README.txt for more information on how this works.
  */
 function new_relic_rpm_plugin_data() {
-  $json = array();
+  $json = array(
+    'site_name' => variable_get('site_name', 'Drupal website'),
+  );
 
   // Add user count, if enabled.
   if (variable_get('new_relic_rpm_plugin_count_users', 0) === 1) {
