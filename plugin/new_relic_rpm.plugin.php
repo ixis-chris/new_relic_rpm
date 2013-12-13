@@ -68,7 +68,7 @@ $request->licenseKey = $opts['k'];
 $request->host = $opts['h'];
 
 $request->metricName = 'Site-Install';
-$request->metricGuid = 'dev.drupal.relic';
+$request->metricGuid = 'org.Drupal';
 $request->metricDuration = 1;
 
 $request->sendRequest();
