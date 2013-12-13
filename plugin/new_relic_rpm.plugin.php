@@ -69,7 +69,7 @@ $request->host = $opts['h'];
 
 $request->metricName = isset($json->site_name) ? $json->site_name : 'Unknown website';
 $request->metricGuid = 'org.Drupal';
-$request->metricDuration = 1;
+$request->metricDuration = 300;
 
 $request->sendRequest();
 print_r($request->response);
